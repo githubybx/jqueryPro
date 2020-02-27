@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="../resource/jquery.js"></script>
+    <script src="../resource/jquery.validate.min.js"></script>
+</head>
+
+<body>
+  <div>
+    <p>邮箱</p>
+    <input id="email" placeholder="请输入邮箱"></input><label class="checkEma"></label>
+    <p class="pas">密码</p>
+    <input id="pass" placeholder="请输入密码"></input><label class="checkPas"></label><br>
+    <button id="login">登录</button><br>
+    <button id="regist">注册</button>
+  </div>
+</body>
+<script>
+  $(document).ready(function(){
+     $("#regist").click(function(){
+       console.log("跳转");
+       window.location.href = "./regist.html";
+     }),
+     $("#login").click(function(){
+      console.log("开始验证");
+      var email = $("#email").val();
+      var pass= $("#pass").val();
+      if(pass == ""){
+        console.log("密码不为空");
+        return;
+      }
+      if(email == ""){
+        console.log("邮箱不为空");
+        return;
+      }
+      if(pass != null && pass.length < 6 || pass.length > 10){
+        console.log("密码的长度在6~10位");
+        return;
+      }
+      var checkEmail = /[\d]{6,10}@qq.com/;
+      if(!email.match(checkEmail)){
+        console.log("邮箱格式错误");
+        return;
+      }
+      else{
+        $.ajax({
+          url:"http://localhost:8081/java/login",
+          data:{
+            email:email,
+            pass:pass
+          },
+          type: 'POST',
+          success:function(data,status){
+            if(data.code == "1000002"){
+              window.location.href = "./start.html";
+            }else{
+              alert("信息有误");
+              $("#email").val("");
+              $("#pass").val("");
+            }
+          }
+        })
+        console.log("登录成功");
+      }
+     })
+  });
+</script>
+<style>
+  * {
+    padding: 0;
+    margin: 0;
+
+  }
+
+  div {
+    border: 0px solid red;
+    width: 30%;
+    height: 50%;
+    margin: 0 auto;
+    margin-top: 10%;
+
+  }
+
+  body {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-image: url('../image/c.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-repeat: no-repeat;
+    text-align: center;
+  }
+
+  button {
+    margin-top: 5%;
+    width: 30%;
+    height: 13%;
+    border-radius: 10%;
+    border: none;
+    background-color: greenyellow;
+    opacity: 0.6;
+
+  }
+
+  .pas {
+    margin-top: 5%;
+  }
+
+  input {
+    width: 60%;
+    height: 15%;
+    opacity: 0.6;
+  }
+
+  button:hover {
+    background-color: blue;
+  }
+</style>
+
+</html>

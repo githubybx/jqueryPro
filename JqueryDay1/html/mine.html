@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="../resource/jquery.validate.min.js"></script>
+</head>
+
+<body>
+    <table  id="form1">
+        <tr>
+            <td class="left">姓名</td>
+            <td class="mid"></td>
+            <td class="right" id="name">
+                <input type="text" placeholder="请填写姓名" name="name">
+            </td>
+        </tr>
+        <tr>
+            <td class="left">邮箱</td>
+            <td class="mid"></td>
+            <td class="right" id="name">
+                <input type="text" placeholder="请填写邮箱" name="email">
+            </td>
+        </tr>
+        <tr>
+            <td class="left">爱好</td>
+            <td class="mid"></td>
+            <td class="right">
+                <label>篮球</label><input type="checkbox" value="basketball">
+                <label style="margin-left: 4%;">足球</label><input type="checkbox" value="football" name="hobby[]">
+                <label style="margin-left: 4%;"></label>羽毛球</label><input type="checkbox" value="badminton"
+                    name="hobby[]">
+                <label style="margin-left: 4%;"></label>游泳</label><input type="checkbox" value="swim" name="hobby[]">
+                <label style="margin-left: 4%;"></label>健身</label><input type="checkbox" value="exercise"
+                    name="hobby[]">
+            </td>
+        </tr>
+        <tr>
+            <td class="left">个人简介</td>
+            <td class="mid"></td>
+            <td class="right">
+                <textarea rows="3" cols="70" name="info"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="left">性别</td>
+            <td class="mid"></td>
+            <td class="right">
+                <label for="man">男</label><input type="radio" name="sex" value="man" id="man">
+                <label for="woamn" style="margin-left: 10%;">女</label><input type="radio" name="sex" value="woman"
+                    id="woman" checked>
+            </td>
+        </tr>
+        <tr>
+            <td class="left">昵称</td>
+            <td class="mid"></td>
+            <td class="right"><input type="text" placeholder="请填写昵称" name="sname"></td>
+        </tr>
+        <tr>
+            <td class="left">个性签名</td>
+            <td class="mid"></td>
+            <td class="right"><input type="text" placeholder="请填写个性签名" name="sign"></td>
+        </tr>
+
+    </table>
+    <div id="button">
+        <div class="button submit1">提交</div>
+        <div class="button reset">重置</div>
+    </div>
+</body>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    html,
+    body {
+        width: 100%;
+        height: 99.9999%;
+        overflow: hidden;
+        border: 1xp springgreen solid;
+        padding-top: 0.0001%;
+        background-color: honeydew;
+    }
+
+
+    table {
+        width: 50%;
+        height: 80%;
+        margin: 0 auto;
+        margin-top: 3%;
+        background-color: gainsboro;
+        box-shadow: 30px 30px 10px #888888;
+    }
+
+    .mid {
+        width: 10%;
+    }
+
+    input[type="text"] {
+        width: 40%;
+        height: 50%;
+    }
+
+    .button {
+        width: 120px;
+        height: 40px;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: chartreuse;
+    }
+
+    .button:hover {
+        background-color: springgreen;
+    }
+
+    .button:active {
+        background-color: greenyellow;
+    }
+
+    #button {
+        width: 50%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-around;
+        margin-top: 2%;
+    }
+
+    input,
+    textarea {
+        opacity: 0.4;
+    }
+</style>
+<script>
+$(document).ready(function () {
+    function validform(formId){
+  /*关键在此增加了一个return，返回的是一个validate对象，这个对象有一个form方法，返回的是是否通过验证*/ 
+  function validform(){
+        return $("#form1").validate({
+            rules:{
+                name:{
+                    required:true,
+                    notEqualTo:"#oldPassword"
+                }
+            },
+            messages:{
+                name:{
+                    required:"新密码不能为空"
+                }
+            }
+        });
+    }
+    //注册表单验证
+    $(validform());
+
+    //点击按钮事件
+    $("#submit1").click(function(){
+        if (validform().form()) {
+            //请求ajax
+           console.log("haha");
+        }else{}
+    });
+        // function validForm(formId) {
+        //     return $(formId).validate({
+        //         rules: {
+        //             name: {
+        //                 required: true,
+        //                 minlength: 3
+        //             }
+        //             // info: {
+        //             //     required: true,
+        //             //     minlength: 10
+        //             // },
+        //             // email: {
+        //             //     required: true,
+        //             //     email: true
+        //             // },
+        //             // "hobby[]": {
+        //             //     required: true,
+        //             //     minlength: 2
+        //             // }
+        //         },
+        //         messgaes: {
+        //             name: {
+        //                 required: "请输入姓名",
+        //                 minlength: "长度最少为3为位"
+        //             }
+        //             // info: {
+        //             //     required: "请输入简介",
+        //             //     minlength: "长度最少是10位"
+        //             // },
+        //             // email: {
+        //             //     required: "请输入邮箱",
+        //             //     email: "请输入正确的邮箱"
+        //             // },
+        //             // "hobby[]": {
+        //             //     required: "请选择爱好",
+        //             //     minlength: "请至少选择两个"
+        //             // }
+        //         }
+        //     })
+        // }
+        //         $(".submit").click(function () {
+        //             console.log("start");
+        //             if (validForm("#form").form()) {
+        //                 console.log("验证成功");
+        //             } else {
+        //                 console.log("验证失败");
+        //             }
+        //         })
+
+</script>
+
+</html>

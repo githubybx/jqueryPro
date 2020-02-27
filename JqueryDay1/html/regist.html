@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="../resource/jquery.js"></script>
+    <script src="../resource/jquery.validate.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <input placeholder="请输入邮箱" id="email"></input>
+        <input placeholder="请输入密码" id="pass"></input>
+        <input placeholder="再次输入密码" id="repass"></input>
+        <input placeholder="请输入验证码" id="identifyCode"></input><br>
+        <button id="sendMsg">发送验证码</button>
+        <button id="regist">注册</button>
+    </div>
+</body>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+
+    }
+
+    div {
+        border: 0px solid red;
+        width: 30%;
+        height: 50%;
+        margin: 0 auto;
+        margin-top: 10%;
+
+    }
+
+    body {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-image: url('../image/h.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-repeat: no-repeat;
+        text-align: center;
+    }
+
+    button {
+        margin-top: 8%;
+        width: 30%;
+        height: 13%;
+        border-radius: 15%;
+        border: none;
+        background-color: greenyellow;
+        opacity: 0.6;
+    }
+
+    .pas {
+        margin-top: 5%;
+    }
+
+    input {
+        width: 60%;
+        height: 15%;
+        margin-top: 5%;
+        opacity: 0.6;
+    }
+
+    button:hover {
+        background-color: blue;
+        border: none;
+        border-radius: 15%;
+    }
+
+    button:active {
+        background-color: red;
+        border: none;
+        border-radius: 15%;
+    }
+
+    .regist {
+        margin-left: 5%;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        var verifycode;
+        $("#regist").click(function () {
+            console.log("开始验证");
+            var email = $("#email").val();
+            var pass = $("#pass").val();
+            var repass = $("#repass").val();
+            var identifyCode = $("#identifyCode").val();
+            console.log("验证码" + identifyCode + " " + "邮箱" + email + " " + "密码" + pass + " " + "重复密码" + repass);
+            if (email === "") {
+                console.log("邮箱不为空");
+                return;
+            }
+            var checkEmail = /[\d]{6,10}@qq.com/;
+            if (!email.match(checkEmail)) {
+                console.log("邮箱格式错误");
+                return;
+            }
+            if (pass === "" || repass == "") {
+                console.log("密码不为空");
+                return;
+            }
+            if (identifyCode === "") {
+                console.log("验证码不为空");
+                return;
+            }
+            if (pass !== null && pass.length < 6 || pass.length > 10) {
+                console.log("密码的长度在6~10位");
+                return;
+            }
+            if (repass !== null && repass.length < 6 || repass.length > 10) {
+                console.log("密码的长度在6~10位");
+                return;
+            }
+            if(repass != pass){
+                console.log("两次密码不一致");
+                return;
+            }
+            if(verifycode == ""){
+                console.log("请点击发送验证码");
+            }
+            if(verifycode != identifyCode){
+                console.log(verifycode + " " + "验证码" + identifyCode);
+                console.log("验证码错误");
+            }
+            else {
+                $.ajax({
+                    url:"http://localhost:8081/java/regist",
+                    type:'POST',
+                    crossDomain:true,
+                    data:{
+                        email:email,
+                        pass:pass,
+                    },
+                    success:function(data,status){
+                       console.log(data);
+                       if(data.code == 1000003){
+                           console.log("重复注册");
+                           return;
+                       }
+                       if(data.code == 1000004){
+                           console.log("注册成功");
+                           window.location.href = "./login.html";
+                       }else{
+                        console.log("注册失败");
+                        return;
+                       }
+                    }
+                })
+            }
+        }),
+            $("#sendMsg").click(function () {
+                var checkEmail = /[\d]{6,10}@qq.com/;
+                var email = $("#email").val();
+                if (email == "") {
+                    console.log("邮箱不能为空");
+                    return;
+                }
+                if (!email.match(checkEmail)) {
+                    console.log("邮箱格式错误");
+                    return;
+                }
+                $.ajax({
+                    url: "http://localhost:8081/sendMail",
+                    data: {
+                        email: email
+                    }, 
+                    type: 'POST',
+                    crossDomain: true,
+                    success: function (data, status) {
+                       verifycode = data.data;
+                        console.log("数据: " + verifycode + "\n状态: " + status);
+                    }
+                })
+            });
+    })
+</script>
+
+</html>
